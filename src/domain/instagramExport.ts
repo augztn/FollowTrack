@@ -90,11 +90,11 @@ export function parseInstagramExport(zipBytes: Uint8Array): RelationshipSnapshot
 
   const entries = Object.entries(archive).filter(([path]) => !path.endsWith('/'));
   const followerFiles = entries
-    .filter(([path]) => /(^|\/)followers(?:_\\d+)?\\.json$/i.test(path))
+    .filter(([path]) => /(^|\/)followers(?:_\d+)?\.json$/i.test(path))
     .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }));
-  const followingFile = entries.find(([path]) => /(^|\/)following\\.json$/i.test(path));
-  const pendingFile = entries.find(([path]) => /(^|\/)(?:pending_follow_requests|follow_requests_sent|follow_requests_you.?ve_sent)\\.json$/i.test(path));
-  const blockedFile = entries.find(([path]) => /(^|\/)blocked_(?:profiles|accounts|users)\\.json$/i.test(path));
+  const followingFile = entries.find(([path]) => /(^|\/)following\.json$/i.test(path));
+  const pendingFile = entries.find(([path]) => /(^|\/)(?:pending_follow_requests|follow_requests_sent|follow_requests_you.?ve_sent)\.json$/i.test(path));
+  const blockedFile = entries.find(([path]) => /(^|\/)blocked_(?:profiles|accounts|users)\.json$/i.test(path));
 
   if (followerFiles.length === 0 || !followingFile) {
     throw new Error('Could not find followers_*.json and following.json. Export Followers and following in JSON format.');
