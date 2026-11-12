@@ -18,7 +18,6 @@ export function buildHistoricalInsights(
   current: RelationshipSnapshot,
   previous?: RelationshipSnapshot,
 ): HistoricalInsights {
-  const previousFollowers = new Set((previous?.followers ?? []).map(normalize));
   const currentFollowers = new Set(current.followers.map(normalize));
   const unfollowers = previous
     ? unique(previous.followers.filter((name) => !currentFollowers.has(normalize(name))))
