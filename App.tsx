@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { compareRelationships } from './src/domain/compare';
 import { buildHistoricalInsights } from './src/domain/history';
-import type { AccountProfile, RelationshipSnapshot, RelationshipTab } from './src/domain/types';
+import type { AccountProfile, RelationshipTab } from './src/domain/types';
 import { pickInstagramExport } from './src/features/import/readInstagramZip';
 import { loadProfiles, saveProfiles } from './src/features/accounts/profileStorage';
 
