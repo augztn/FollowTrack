@@ -1,21 +1,34 @@
 # FollowTrack
 
-An open-source Android app for analysing Instagram follower from your **official Instagram data export**.
+A privacy-first Android app for understanding follower relationships from an official account data export.
 
-FollowTrack does not ask for your Instagram password, log in to Instagram, scrape Instagram, or upload your export. Analysis runs on-device.
-
-> **Status: early MVP.** Android debug builds run in GitHub Actions on pushes to `main` and can be triggered manually. ZIP import, relationship comparison, search, and an Android build workflow are included. Validate against your own export before relying on results. No signed production release is available yet.
+FollowTrack does not request account passwords, log in to social platforms, scrape websites, or upload personal exports. Data is parsed and stored locally on the device.
 
 ## Features
 
-- Import the ZIP downloaded through Instagram Accounts Center.
+- Import a JSON ZIP export.
 - Compare followers and following:
-  - **Not following back** — accounts you follow that do not follow you.
-  - **You don't follow back** — accounts that follow you but are not followed by you.
-  - **Mutual** — accounts in both lists.
-- Search results by username.
-- Display counts and source snapshot date.
-- Process the export locally; no app backend or analytics SDK.
+  - Not following back
+  - Not followed back
+  - Mutual connections
+- Review outgoing pending follow requests when included in the export.
+- Compare consecutive imports to identify accounts missing from the latest follower list.
+- View explicitly exported blocked accounts.
+- Rank followers by their earliest available follow timestamp.
+- Maintain multiple local profiles with separate import histories.
+- Search each report by username.
+- Keep unlimited local snapshots without a subscription or upload quota.
+
+Historical reports require multiple imports. A single export cannot establish who unfollowed you in the past. An account missing from a later follower list is reported as an unfollower; the app does not claim to know why that account disappeared. Blocked accounts are shown only when the export explicitly includes them.
+
+## Privacy and data handling
+
+- No credentials, passwords, session cookies, or direct account access.
+- No scraping, remote analytics, or app backend.
+- ZIP parsing happens on-device.
+- Extracted account names and import history are stored in local app storage.
+- Deleting a profile removes its local snapshots from the app's storage.
+- Exports may contain sensitive personal information. Do not share an unredacted archive or debug logs.
 
 ## Stack
 
@@ -23,15 +36,12 @@ FollowTrack does not ask for your Instagram password, log in to Instagram, scrap
 - TypeScript (strict)
 - Expo Document Picker and File System
 - fflate ZIP parsing
-- Vitest for domain/parser tests
-
-## Requirements
-
-- Node.js 22.13+ (or 24.3+)
-- npm 10+
-- Android Studio + Android SDK for local Android builds
+- AsyncStorage for local profile and history persistence
+- Vitest for domain and parser tests
 
 ## Development
+
+Requirements: Node.js 24, npm, Java 17, and Android SDK for local Android builds.
 
 ```bash
 npm install
@@ -41,7 +51,7 @@ npx expo-doctor
 npx expo start
 ```
 
-## Build an Android APK locally
+## Build Android APK locally
 
 ```bash
 npx expo prebuild --platform android --clean
@@ -49,43 +59,38 @@ cd android
 ./gradlew assembleDebug
 ```
 
-APK: `android/app/build/outputs/apk/debug/app-debug.apk`.
+APK output: `android/app/build/outputs/apk/debug/app-debug.apk`.
 
-A GitHub Actions workflow also builds a debug APK on pushes and pull requests. The APK is uploaded as a workflow artifact. Debug APKs are for testing, not Play Store distribution.
+GitHub Actions builds a debug APK on pushes to `main`, pull requests, and manual workflow dispatch. The APK is uploaded as a workflow artifact. Debug builds are for testing and are not signed production releases.
 
-## Import your Instagram export
+## Prepare a compatible data export
 
-1. Open Instagram **Settings and activity**.
-2. Open **Accounts Center** → **Your information and permissions**.
-3. Choose **Download your information**.
-4. Select the Instagram profile and **Some of your information**.
-5. Include **Followers and following**.
-6. Choose **All time** and **JSON** format.
-7. Download the ZIP and import it in FollowTrack.
+1. Open your social account's official account center.
+2. Find the data download or export section.
+3. Select follower and following relationship data.
+4. Choose JSON format and download the archive.
+5. Import the ZIP into the matching FollowTrack profile.
 
-Instagram changes export layouts occasionally. If an import fails, report the issue with a redacted sample structure. Never publish an unredacted export: it contains personal information.
+Export folder names and JSON structures can vary by platform and over time. Unsupported layouts produce an import error rather than silently generating incomplete reports.
 
-## Comparison semantics
+## Report semantics
 
 - Not following back = following − followers
-- You don't follow back = followers − following
+- Not followed back = followers − following
 - Mutual = followers ∩ following
+- Unfollowers = previous followers − current followers
+- Oldest followers = ascending order by available follower timestamp
 
-Usernames are compared case-insensitively. Results represent the date of the imported export, not live Instagram state. Import a new export to refresh.
-
-## Privacy
-
-- No Instagram credentials are requested or accepted.
-- No Instagram API, scraping, or background account access.
-- The ZIP is parsed locally and not transmitted by this app.
-- This MVP does not include a remote service or cloud backup.
+All username comparisons are case-insensitive. Results reflect the selected export, not live account state.
 
 ## Limitations
 
-- This is an independent implementation, not affiliated with Instagram or Meta.
-- No live follower tracking.
-- Export format variations may require parser updates.
-- Local data persistence, history, CSV export, and signed release distribution are not yet implemented.
+- No live tracking or automatic background refresh.
+- Historical changes require at least two imports for the same profile.
+- A missing follower does not establish whether they unfollowed, deactivated, or otherwise changed account visibility.
+- Blocked-account reporting depends on the export containing a blocked-account dataset.
+- Oldest-follower ranking includes only records with usable timestamps.
+- Cloud sync, account recovery, and signed production distribution are not included.
 
 ## License
 
