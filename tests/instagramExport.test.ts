@@ -23,6 +23,28 @@ describe('parseInstagramExport', () => {
     expect(result.sourceTimestamp).toBe(1700000003);
   });
 
+  it('reads pending requests, blocked accounts, and follower timestamps when present', () => {
+    const zip = zipSync({
+      'followers_and_following/followers_1.json': strToU8(JSON.stringify([
+        { string_list_data: [{ value: 'older', timestamp: 1500000000 }] },
+        { string_list_data: [{ value: 'newer', timestamp: 1700000000 }] },
+      ])),
+      'followers_and_following/following.json': strToU8(JSON.stringify({
+        relationships_following: [{ string_list_data: [{ value: 'friend' }] }],
+      })),
+      'followers_and_following/pending_follow_requests.json': strToU8(JSON.stringify({
+        relationships_follow_requests_sent: [{ string_list_data: [{ value: 'pending_user' }] }],
+      })),
+      'followers_and_following/blocked_profiles.json': strToU8(JSON.stringify([
+        { string_list_data: [{ value: 'blocked_user' }] },
+      ])),
+    });
+    const result = parseInstagramExport(zip);
+    expect(result.pendingFollowRequests).toEqual(['pending_user']);
+    expect(result.blockedAccounts).toEqual(['blocked_user']);
+    expect(result.followerRecords?.map((item) => item.username)).toEqual(['older', 'newer']);
+  });
+
   it('rejects a ZIP without the expected export files', () => {
     const zip = zipSync({ 'readme.txt': strToU8('not an export') });
     expect(() => parseInstagramExport(zip)).toThrow(/Could not find followers/);
