@@ -1,6 +1,6 @@
 # FollowTrack
 
-An open-source Android app for analysing Instagram follower relationships from your **official Instagram data export**.
+An open-source Android app for analysing Instagram follower from your **official Instagram data export**.
 
 FollowTrack does not ask for your Instagram password, log in to Instagram, scrape Instagram, or upload your export. Analysis runs on-device.
 
