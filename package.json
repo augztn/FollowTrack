@@ -1,0 +1,28 @@
+{
+  "name": "followtrack",
+  "version": "0.1.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "prebuild:android": "expo prebuild --platform android --clean",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "base64-js": "^1.5.1",
+    "expo": "~58.0.23",
+    "expo-document-picker": "~58.0.0",
+    "expo-file-system": "~58.0.0",
+    "fflate": "^0.8.2",
+    "react": "19.3.0",
+    "react-native": "0.88.1"
+  },
+  "devDependencies": {
+    "@types/base64-js": "^1.5.0",
+    "@types/react": "~19.3.0",
+    "typescript": "~5.9.3",
+    "vitest": "^4.0.8"
+  }
+}
