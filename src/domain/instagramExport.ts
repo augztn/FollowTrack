@@ -109,10 +109,12 @@ export function parseInstagramExport(zipBytes: Uint8Array): RelationshipSnapshot
   }
 
   const [followingPath, followingBytes] = followingFile;
-  const followingResult = usernamesFromRecords(parseJson(followingBytes, followingPath));
-  if (followingResult.accounts.length === 0 && !recordsFrom(parseJson(followingBytes, followingPath)).length) {
-    throw new Error('following.json has an unsupported structure.');
+  const followingJson = asRecord(parseJson(followingBytes, followingPath));
+  const relationships = followingJson?.relationships_following;
+  if (!Array.isArray(relationships)) {
+    throw new Error('following.json has an unsupported structure. Expected relationships_following.');
   }
+  const followingResult = usernamesFromRecords(relationships);
   if (followingResult.timestamp !== null) {
     sourceTimestamp = Math.max(sourceTimestamp ?? followingResult.timestamp, followingResult.timestamp);
   }
