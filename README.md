@@ -4,7 +4,7 @@ An open-source Android app for analysing Instagram follower relationships from y
 
 FollowTrack does not ask for your Instagram password, log in to Instagram, scrape Instagram, or upload your export. Analysis runs on-device.
 
-> **Status: early MVP.** ZIP import, relationship comparison, search, and an Android build workflow are included. Validate against your own export before relying on results. No signed production release is available yet.
+> **Status: early MVP.** Android debug builds run in GitHub Actions on pushes to `main` and can be triggered manually. ZIP import, relationship comparison, search, and an Android build workflow are included. Validate against your own export before relying on results. No signed production release is available yet.
 
 ## Features
 
