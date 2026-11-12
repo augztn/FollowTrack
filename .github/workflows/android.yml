@@ -24,7 +24,12 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22.13.1
+          node-version: 24
+
+      - name: Verify toolchain
+        run: |
+          node --version
+          npm --version
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
